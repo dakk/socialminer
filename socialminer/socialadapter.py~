@@ -1,0 +1,23 @@
+# Report packet
+class Report:
+    def __init__ (self, adapter, user, resource_type, resource_id, resource_link, resource_body):
+	self.adapter = adapter
+	self.user = user
+	self.resourceType = resource_type
+	self.resourceID = resource_id
+	self.resourceLink = resource_link
+	self.resourceBody = resource_body
+
+    def serialize (self):
+	return { 'adapter': self.adapter, 'user': self.user, 'resourceType': self.resourceType, 'resourceID': self.resourceID, 'resourceLink': self.resourceLink, 'resourceBody': self.resourceBody }
+
+    
+# Adapter for social network
+class SocialAdapter:
+    NAME = 'None'
+    
+    def __init__ (self, apiauth, reporthandler):
+	pass
+
+    
+    

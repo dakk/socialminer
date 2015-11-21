@@ -1,0 +1,3 @@
+class SocialMiner:
+    def reportHandler (self, report):
+	pass
