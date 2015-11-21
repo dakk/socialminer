@@ -19,7 +19,7 @@ Configuration
 ---
 Start socialminer for the first time:
 
-```socialminer```
+``` socialminer ```
 
 Socialminer will create an empty configuration file 'socialminer.json' in your current directory.
 
@@ -34,7 +34,7 @@ Start socialminer
 ---
 To start the socialminer instance after its configuration, type:
 
-```socialminer```
+``` socialminer ```
 
 
 Help the project
