@@ -1,5 +1,5 @@
 class Resource:
-	def __init__ (self, datetime, type, id, link, body, confidence = 0):
+	def __init__ (self, datetime, type, id, link, body, confidence = 1):
 		self.type = type
 		self.ID = id
 		self.link = link

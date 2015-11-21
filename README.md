@@ -50,4 +50,8 @@ To start the socialminer instance after its configuration, type:
 
 ``` socialminer ```
 
+The program will create a file **reports_Facebook.json** and **reports_Twitter.json** with all found accounts and relevant resources. It also
+maintein a local database **reports.db**
+
+
 

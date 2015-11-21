@@ -31,14 +31,18 @@ class SocialMiner:
 	def report (self, report):
 		self.reportLock.acquire ()
 
-		logger.info ('%s: Reporting user %s', report.adapter, report.user)#print (str (report))
 
 		if report.user in self.reportsDict[report.adapter]:
+			logger.info ('%s: User %s already reported, updating', report.adapter, report.user)#print (str (report))
+
 			for tid in report.resources:
 				if not tid in self.reportsDict[report.adapter][report.user].resources:
 					self.reportsDict[report.adapter][report.user].resources[tid] = report.resources[tid]
 		else:
+			logger.info ('%s: Reporting user %s', report.adapter, report.user)#print (str (report))
 			self.reportsDict[report.adapter][report.user] = report
+
+		self.reportsDict[report.adapter][report.user].confidence = len (self.reportsDict[report.adapter][report.user].resources)
 
 		self.db = shelve.open ('./reports.db')
 		self.db['reports'] = self.reportsDict
@@ -71,15 +75,15 @@ class SocialMiner:
 
 
 	def dump (self):
-		data = {}
 		for k in self.reportsDict:
+			data = {}
 			data[k] = {}
 			for kk in self.reportsDict[k]:
 				data[k][kk] = self.reportsDict[k][kk].serialize ()
 
-		f = open ('reports.json', 'w')
-		f.write (json.dumps (data, indent=4, separators=(',', ': ')))
-		f.close ()
+			f = open ('reports_'+k+'.json', 'w')
+			f.write (json.dumps (data, indent=4, separators=(',', ': ')))
+			f.close ()
 
 	def loop (self):
 		for adapter in self.adapters:
