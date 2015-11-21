@@ -35,12 +35,12 @@ class TwitterAdapter (SocialAdapter):
 			if tw.coordinates != None:
 				gl = tw.coordinates
 			elif tw.place != None:
-				gl = tw.place
+				gl = tw.place.full_name
 			elif tw.geo != None:
 				gl = tw.geo
 
-			res = Resource (tw.created_at, 'Tweet', tw.id, '', tw.text, geolocalization=gl)
-			r = Report (self.NAME, tw.user.screen_name, {res.ID: res}, time.time (), tw.user.profile_image_url_https, geolocalization=gl)
+			res = Resource (tw.created_at, 'Tweet', tw.id, '', tw.text, geolocalization=str (gl))
+			r = Report (self.NAME, tw.user.screen_name, {res.ID: res}, time.time (), tw.user.profile_image_url_https, geolocalization=str (gl))
 			self.reportHandler (r)
 
 
