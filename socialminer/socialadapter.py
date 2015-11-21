@@ -8,6 +8,9 @@ class Resource:
 		self.datetime = datetime
 		self.geolocalization = geolocalization
 
+	def deserialize (data):
+		return Resource (data['datetime'], data['type'], data['id'], data['link'], data['body'], data['geolocalization'], data['confidence'])
+
 	def serialize (self):
 		return { 'datetime': str (self.datetime), 'type': self.type, 'id': self.ID, 'link': self.link, 'body': self.body, 'confidence': self.confidence, 'geolocalization': str(self.geolocalization) }
 
@@ -24,6 +27,12 @@ class Report:
 		self.resources = resources
 		self.datetime = datetime
 
+	def deserialize (data):
+		r = Report (data['adapter'], data['user'], [], data['datetime'], data['avatar'], data['confidence'], data['geolocalization'])
+		for x in data['resources']:
+			r.resources.append (Resource.deserialize (x))
+		return r
+		
 	def serialize (self):
 		r = { 'adapter': self.adapter, 'avatar': self.avatar, 'user': self.user, 'resources': [], 'confidence': self.confidence, 'geolocalization': self.geolocalization, 'datetime': self.datetime }
 		for res in self.resources:
