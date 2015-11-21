@@ -3,6 +3,8 @@ import sys
 import os
 import json
 import time
+import shelve
+from queue import Queue
 from threading import Lock, Thread
 from . import config
 from .twitteradapter import TwitterAdapter
@@ -18,15 +20,34 @@ class SocialMiner:
 		self.threads = []
 		self.reportLock = Lock ()
 		self.reportsDict = {}
-		self.reports = []
+		self.queue = Queue ()
 
-	def reportHandler (self, report):
+		self.db = shelve.open ('./reports.db')
+		if 'reports' in self.db:
+			self.reportsDict = self.db['reports']
+		self.db.close ()
+
+	def report (self, report):
 		self.reportLock.acquire ()
-		print (report)
-		self.reportsDict[report.adapter][report.user] = report
-		self.reports.append (report)
+
+		logger.info ('%s: Reporting user %s', report.adapter, report.user)#print (str (report))
+
+		if report.user in self.reportsDict[report.adapter]:
+			for tid in report.resources:
+				if not tid in self.reportsDict[report.adapter][report.user].resources:
+					self.reportsDict[report.adapter][report.user].resources[tid] = report.resources[tid]
+		else:
+			self.reportsDict[report.adapter][report.user] = report
+
+		self.db = shelve.open ('./reports.db')
+		self.db['reports'] = self.reportsDict
+		self.db.sync ()
+		self.db.close ()
+
 		self.reportLock.release ()
 
+	def reportHandler (self, report):
+		self.queue.put (report)
 
 	def startAdapters (self):
 		adapts = []
@@ -39,13 +60,28 @@ class SocialMiner:
 
 		for adapter in adapts:
 			if adapter.authenticate ():
-				self.reportsDict [adapter.NAME] = {}
+				if not adapter.NAME in self.reportsDict:
+					self.reportsDict [adapter.NAME] = {}
 				self.adapters.append (adapter)
 
 
 	def loop (self):
+		for adapter in self.adapters:
+			thread = Thread(target=adapter.loop, args=())
+			self.threads.append (thread)
+			thread.start ()
+			logger.info ('Started thread for adapter %s', adapter.NAME)
+
 		while True:
-			logger.debug ('Running, %d suspicious accounts detected', len (self.reports))
+			t = True
+			while t:
+				try:
+					d = self.queue.get_nowait ()
+					self.report (d)
+				except:
+					t = False
+
+			logger.debug ('Running, %d suspicious accounts detected', len (self.reportsDict['Twitter']))
 			for ad in self.reportsDict:
 				logger.debug ('\t%s -> %d accounts', ad, len (self.reportsDict[ad]))
 			time.sleep (10)

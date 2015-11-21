@@ -1,7 +1,9 @@
 import tweepy
 import logging
+import time
 from . import config
-from .socialadapter import SocialAdapter, Report
+from .searchterms import SearchTerms
+from .socialadapter import SocialAdapter, Report, Resource
 
 logger = logging.getLogger('socialminer')
 
@@ -25,3 +27,36 @@ class TwitterAdapter (SocialAdapter):
 		except Exception as e:
 			logger.critical ('Bad authentication %s', e)
 			return False
+
+
+	def reportTweets (self, tweets):
+		for tw in tweets:
+			res = Resource (tw.created_at, 'Tweet', tw.id, '', tw.text)
+			r = Report (self.NAME, tw.user.screen_name, {res.ID: res}, time.time (), tw.user.profile_image_url_https)
+			self.reportHandler (r)
+
+
+	def analyze (self, phrase):
+		f = True
+		page = 1
+		while f and page < 1499:
+			try:
+				res = self.api.search (phrase, rpp=100) #, page=page)
+			except:
+				logger.debug ('Reached rate limit, waiting 60 seconds...')
+				time.sleep (60)
+				continue
+
+			if len (res) != 0:
+				self.reportTweets (res)
+				page += 1
+				f = False #True
+			else:
+				f = False
+
+	def loop (self):
+		while True:
+			(phrase_t, phrase) = SearchTerms.generate ()
+			self.analyze (phrase)
+			self.analyze (phrase_t)
+			time.sleep (5)
