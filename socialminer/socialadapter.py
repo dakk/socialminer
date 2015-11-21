@@ -1,28 +1,42 @@
-# Report packet
+class Resource:
+	def __init__ (self, type, id, link, body, confidence):
+		self.type = type
+		self.ID = id
+		self.link = link
+		self.body = body
+		self.confidence = confidence
+
+	def serialize (self):
+		return { 'type': self.type, 'id': self.ID, 'link': self.link, 'body': self.body, 'confidence': self.confidence }
+
+	def __repr__ (self):
+		return "<Resource Type=%s ID=%s Link=%s Body=%s Confidence=%f>" % (self.type, self.ID, self.link, self.body, self.confidence)
+
 class Report:
-    def __init__ (self, adapter, user, resource_type, resource_id, resource_link, resource_body, confidence):
-	self.adapter = adapter
-	self.user = user
-	self.resourceType = resource_type
-	self.resourceID = resource_id
-	self.resourceLink = resource_link
-	self.resourceBody = resource_body
-	self.confidence = confidence
+	def __init__ (self, adapter, user, resources, confidence = 0.0, geolocalization = None):
+		self.adapter = adapter
+		self.user = user
+		self.confidence = confidence
+		self.geolocalization = geolocalization
+		self.resources = resources
 
-    def serialize (self):
-	return { 'adapter': self.adapter, 'user': self.user, 'resourceType': self.resourceType, 'resourceID': self.resourceID, 'resourceLink': self.resourceLink, 'resourceBody': self.resourceBody, 'confidence': self.confidence }
+	def serialize (self):
+		return { 'adapter': self.adapter, 'user': self.user, 'resources': self.resources.map (lambda r: r.serialize ()), 'confidence': self.confidence, 'geolocalization': self.geolocalization }
 
-    def __repr__ (self):
-	return "<%sReport User=%s Confidence=%s RType=%s RID=%s RLink=%s RBody=%s>" % (self.adapter, self.user, self.confidence, self.resourceType, self.resourceID, self.resourceLink, self.resourceBody)
+	def __repr__ (self):
+		r = "<%sReport User=%s Confidence=%s Geolocalization=%s Resources=%d>\n" % (self.adapter, self.user, self.confidence, self.geolocalization, len(self.resources))
+		for res in self.resources:
+			r += '\t' + r + '\n'
+		r += '</%sReport>'
 
-    
+
+
 # Adapter for social network
 class SocialAdapter:
-    NAME = 'None'
-    
-    def __init__ (self, authkeys, reporthandler):
-	pass
+	NAME = 'None'
 
-    def authenticate (self):
-	pass
-    
+	def __init__ (self, authkeys, reporthandler):
+		pass
+
+	def authenticate (self):
+		pass
