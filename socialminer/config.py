@@ -48,6 +48,9 @@ BASE_CONF = {
 		    'consumer_secret': '',
 		    'access_token': '',
 		    'access_token_secret': ''
+		},
+		"Facebook": {
+			'access_token': ''
 		}
     },
 	"reportservers": [

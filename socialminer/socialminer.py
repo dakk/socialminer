@@ -8,6 +8,7 @@ from queue import Queue
 from threading import Lock, Thread
 from . import config
 from .twitteradapter import TwitterAdapter
+from .facebookadapter import FacebookAdapter
 
 logger = logging.getLogger('socialminer')
 logger.setLevel (10)
@@ -55,8 +56,12 @@ class SocialMiner:
 				opts = self.conf['adapters'][adn]
 
 				if adn == 'Twitter':
-					 tw = TwitterAdapter (opts, self.reportHandler)
-					 adapts.append (tw)
+					tw = TwitterAdapter (opts, self.reportHandler)
+					adapts.append (tw)
+
+				if adn == 'Facebook':
+					fb = FacebookAdapter (opts, self.reportHandler)
+					adapts.append (fb)
 
 		for adapter in adapts:
 			if adapter.authenticate ():

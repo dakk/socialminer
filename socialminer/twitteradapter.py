@@ -21,7 +21,7 @@ class TwitterAdapter (SocialAdapter):
 			self.auth.secure = True
 			self.auth.set_access_token(self.authKeys['access_token'], self.authKeys['access_token_secret'])
 			self.api = tweepy.API (self.auth)
-			logger.info ('Adapter %s successfully logged as %s', self.NAME, self.api.me().name)
+			logger.info ('Adapter %s successfully logged', self.NAME)
 			return True
 
 		except Exception as e:

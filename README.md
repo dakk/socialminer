@@ -1,12 +1,19 @@
 socialminer
 ===
 
-Distributed scraper for social networks.
+Search and report for social accounts related to the ISIS. The search is based on a dictionary of suspicious keywords, results are not 
+guaranteed to be reliable.
 
 
 Installation
 ---
-Clone the repository:
+
+First you need to install requirements:
+
+```git clone https://github.com/pythonforfacebook/facebook-sdk.git && cd facebook-sdk && sudo python3 setup.py install```
+
+
+Then clone the socialminer repository:
 
 ```git clone https://github.com/dakk/socialminer```
 
@@ -28,6 +35,12 @@ Configure Twitter
 ---
 Go to https://apps.twitter.com/, create a new application.
 Go to 'Keys and Access Tokens' tab, press on 'Generate Access Token'; edit 'socialminer.json' and put all the request data in the empty fields.
+
+
+Configure Facebook
+---
+Go to https://developers.facebook.com/tools/explorer/ and get a temp access token, or register a new facebook application. Edit 'socialminer.json'
+and put the access token in the empty field.
 
 
 Start socialminer
