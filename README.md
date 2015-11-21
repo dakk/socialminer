@@ -4,6 +4,7 @@ socialminer
 Search and report for social accounts related to the ISIS. The search is based on a dictionary of suspicious keywords, results are not 
 guaranteed to be reliable.
 
+You can help the development of this software and the deploy of report servers by donating BTC to: **129k6fDTd66j1LMY5RAdFSQozeBe58nfxE**
 
 Installation
 ---
@@ -50,7 +51,3 @@ To start the socialminer instance after its configuration, type:
 ``` socialminer ```
 
 
-Help the project
----
-
-You can help the development of this software and the deploy of report servers by donating BTC to: 
