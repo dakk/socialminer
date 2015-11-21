@@ -1,11 +1,11 @@
 socialminer
-###########
+===
 
 Distributed scraper for social networks.
 
 
 Installation
-============
+---
 
 Clone the repository:
 
@@ -17,7 +17,7 @@ Install the software:
 
 
 Configuration
-=============
+---
 
 Start socialminer for the first time:
 
@@ -27,13 +27,13 @@ Socialminer will create an empty configuration file 'socialminer.json' in your c
 
 
 Configure Twitter
------------------
+...
 
 Go to https://apps.twitter.com/, create a new application.
 Go to 'Keys and Access Tokens' tab, press on 'Generate Access Token'; edit socialminer.json and put all the request data in the empty fields.
 
 
 Help the project
-================
+---
 
 You can help the development of this software and the deploy of report servers by donating BTC to: 
