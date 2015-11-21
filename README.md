@@ -27,10 +27,10 @@ Socialminer will create an empty configuration file 'socialminer.json' in your c
 
 
 Configure Twitter
-...
+---
 
 Go to https://apps.twitter.com/, create a new application.
-Go to 'Keys and Access Tokens' tab, press on 'Generate Access Token'; edit socialminer.json and put all the request data in the empty fields.
+Go to 'Keys and Access Tokens' tab, press on 'Generate Access Token'; edit 'socialminer.json' and put all the request data in the empty fields.
 
 
 Help the project
