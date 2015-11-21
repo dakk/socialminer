@@ -70,6 +70,17 @@ class SocialMiner:
 				self.adapters.append (adapter)
 
 
+	def dump (self):
+		data = {}
+		for k in self.reportsDict:
+			data[k] = {}
+			for kk in self.reportsDict[k]:
+				data[k][kk] = self.reportsDict[k][kk].serialize ()
+
+		f = open ('reports.json', 'w')
+		f.write (json.dumps (data, indent=4, separators=(',', ': ')))
+		f.close ()
+
 	def loop (self):
 		for adapter in self.adapters:
 			thread = Thread(target=adapter.loop, args=())
@@ -90,6 +101,7 @@ class SocialMiner:
 			for ad in self.reportsDict:
 				logger.debug ('\t%s -> %d accounts', ad, len (self.reportsDict[ad]))
 			time.sleep (10)
+			self.dump ()
 
 def main ():
 	logger.debug ('Starting socialminer.')

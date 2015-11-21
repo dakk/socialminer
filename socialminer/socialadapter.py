@@ -26,7 +26,7 @@ class Report:
 	def serialize (self):
 		r = { 'adapter': self.adapter, 'avatar': self.avatar, 'user': self.user, 'resources': [], 'confidence': self.confidence, 'geolocalization': self.geolocalization, 'datetime': self.datetime }
 		for res in self.resources:
-			r['resources'].append (self.resources[res])
+			r['resources'].append (self.resources[res].serialize ())
 		return r
 
 	def __repr__ (self):
