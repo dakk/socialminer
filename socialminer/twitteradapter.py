@@ -31,8 +31,16 @@ class TwitterAdapter (SocialAdapter):
 
 	def reportTweets (self, tweets):
 		for tw in tweets:
-			res = Resource (tw.created_at, 'Tweet', tw.id, '', tw.text)
-			r = Report (self.NAME, tw.user.screen_name, {res.ID: res}, time.time (), tw.user.profile_image_url_https)
+			gl = None
+			if tw.coordinates != None:
+				gl = tw.coordinates
+			elif tw.place != None:
+				gl = tw.place
+			elif tw.geo != None:
+				gl = tw.geo
+
+			res = Resource (tw.created_at, 'Tweet', tw.id, '', tw.text, geolocalization=gl)
+			r = Report (self.NAME, tw.user.screen_name, {res.ID: res}, time.time (), tw.user.profile_image_url_https, geolocalization=gl)
 			self.reportHandler (r)
 
 

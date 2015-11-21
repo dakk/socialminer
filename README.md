@@ -54,4 +54,12 @@ The program will create a file **reports_Facebook.json** and **reports_Twitter.j
 maintein a local database **reports.db**
 
 
+TODO
+---
+The software is still work in progress, planned features are:
+- Peer to peer network for data exchanging
+- A more robust search crtieria
+- Integration of other social networks
+
+
 

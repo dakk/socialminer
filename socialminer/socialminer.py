@@ -35,9 +35,15 @@ class SocialMiner:
 		if report.user in self.reportsDict[report.adapter]:
 			logger.info ('%s: User %s already reported, updating', report.adapter, report.user)#print (str (report))
 
+			# Update shared resources
 			for tid in report.resources:
 				if not tid in self.reportsDict[report.adapter][report.user].resources:
 					self.reportsDict[report.adapter][report.user].resources[tid] = report.resources[tid]
+
+			# Update geolocalization
+			if self.reportsDict[report.adapter][report.user].geolocalization == None and report.geolocalization != None:
+				self.reportsDict[report.adapter][report.user].geolocalization = report.geolocalization
+
 		else:
 			logger.info ('%s: Reporting user %s', report.adapter, report.user)#print (str (report))
 			self.reportsDict[report.adapter][report.user] = report
@@ -81,7 +87,7 @@ class SocialMiner:
 			for kk in self.reportsDict[k]:
 				data[k][kk] = self.reportsDict[k][kk].serialize ()
 
-			f = open ('reports_'+k+'.json', 'w')
+			f = open ('reports_' + k + '.json', 'w')
 			f.write (json.dumps (data, indent=4, separators=(',', ': ')))
 			f.close ()
 
@@ -101,7 +107,7 @@ class SocialMiner:
 				except:
 					t = False
 
-			logger.debug ('Running, %d suspicious accounts detected', len (self.reportsDict['Twitter']))
+			logger.debug ('Running, %d suspicious accounts detected', len (self.reportsDict['Twitter']) +  len (self.reportsDict['Facebook']))
 			for ad in self.reportsDict:
 				logger.debug ('\t%s -> %d accounts', ad, len (self.reportsDict[ad]))
 			time.sleep (10)
