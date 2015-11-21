@@ -50,4 +50,7 @@ BASE_CONF = {
 		    'access_token_secret': ''
 		}
     }
+	"reportservers": [
+		{ 'host': '', 'port': '' }
+	]
 }
