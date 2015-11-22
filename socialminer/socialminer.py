@@ -24,7 +24,7 @@ class SocialMiner:
 		self.reportsDict = {}
 		self.queue = Queue ()
 
-		self.db = shelve.open (conf.DATA_DIR + '/reports.db')
+		self.db = shelve.open (config.DATA_DIR + '/reports.db')
 		if 'reports' in self.db:
 			self.reportsDict = self.db['reports']
 		self.db.close ()
