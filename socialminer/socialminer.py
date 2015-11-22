@@ -24,7 +24,7 @@ class SocialMiner:
 		self.reportsDict = {}
 		self.queue = Queue ()
 
-		self.db = shelve.open ('./reports.db')
+		self.db = shelve.open (conf.DATA_DIR + '/reports.db')
 		if 'reports' in self.db:
 			self.reportsDict = self.db['reports']
 		self.db.close ()
@@ -156,7 +156,7 @@ def main ():
 
 	if len (sys.argv) == 2:
 		config.DATA_DIR = sys.argv[1]
-		
+
 	if not os.path.exists(config.DATA_DIR+'/socialminer.json'):
 		logger.warning ('Configuration file %s not present', config.DATA_DIR+'/socialminer.json')
 		f = open (config.DATA_DIR+'/socialminer.json', 'w')
