@@ -144,9 +144,10 @@ class SocialMiner:
 			self.reporter.stats ()
 			time.sleep (10)
 
-			if i % 2 == 0:
+			if i % 6 == 0:
 				t = Thread(target=self.announce, args=())
 				t.start ()
+			if i % 12 == 0:
 				t = Thread(target=self.dump, args=())
 				t.start ()
 

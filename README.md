@@ -1,8 +1,10 @@
 socialminer
 ===
 
-Search and report for social accounts related to the ISIS. The search is based on a dictionary of suspicious keywords, results are not 
-guaranteed to be reliable.
+Peer-to-peer search and report for social accounts related to the ISIS. The search is based on a dictionary of suspicious keywords, results are not 
+guaranteed to be reliable. The software automatically connect to a peer-to-peer network of social miners: miners exchange account reports for creating 
+a distributed database.
+
 
 You can help the development of this software and the deploy of report servers by donating BTC to: **129k6fDTd66j1LMY5RAdFSQozeBe58nfxE**
 
@@ -54,10 +56,11 @@ The program will create a file **reports_Facebook.json** and **reports_Twitter.j
 maintein a local database **reports.db**
 
 
+
+
 TODO
 ---
 The software is still work in progress, planned features are:
-- Peer to peer network for data exchanging (using kademlia network)
 - A more robust search crtieria
 - Integration of other social networks
 - Auto report on social network
