@@ -53,7 +53,8 @@ BASE_CONF = {
 			'access_token': ''
 		}
     },
-	"reportservers": [
-		{ 'host': '', 'port': '' }
-	]
+	"p2p": {
+		"seeds": [ "localhost:3031" ],
+		"port": 3031
+	}
 }

@@ -15,7 +15,7 @@ class Resource:
 		return { 'datetime': str (self.datetime), 'type': self.type, 'id': self.ID, 'link': self.link, 'body': self.body, 'confidence': self.confidence, 'geolocalization': str(self.geolocalization) }
 
 	def __repr__ (self):
-		return "<Resource DateTime=%s Type=%s ID=%s Link=%s Body=%s Confidence=%f Geo=%s>" % (str(self.datetime), self.type, self.ID, self.link, self.body, self.confidence, (self.geolocalization))
+		return "<Resource DateTime=%s Type=%s ID=%s Link=%s Body=%s Confidence=%f Geolocalization=%s>" % (str(self.datetime), self.type, self.ID, self.link, self.body, self.confidence, (self.geolocalization))
 
 class Report:
 	def __init__ (self, adapter, user, resources, datetime, avatar, confidence = 0.0, geolocalization = None):
@@ -28,15 +28,15 @@ class Report:
 		self.datetime = datetime
 
 	def deserialize (data):
-		r = Report (data['adapter'], data['user'], [], data['datetime'], data['avatar'], data['confidence'], data['geolocalization'])
+		r = Report (data['adapter'], data['user'], {}, data['datetime'], data['avatar'], data['confidence'], data['geolocalization'])
 		for x in data['resources']:
-			r.resources.append (Resource.deserialize (x))
+			r.resources[x] = Resource.deserialize (data['resources'][x])
 		return r
 
 	def serialize (self):
-		r = { 'adapter': self.adapter, 'avatar': self.avatar, 'user': self.user, 'resources': [], 'confidence': self.confidence, 'geolocalization': str (self.geolocalization), 'datetime': self.datetime }
+		r = { 'adapter': self.adapter, 'avatar': self.avatar, 'user': self.user, 'resources': {}, 'confidence': self.confidence, 'geolocalization': str (self.geolocalization), 'datetime': self.datetime }
 		for res in self.resources:
-			r['resources'].append (self.resources[res].serialize ())
+			r['resources'][res] = self.resources[res].serialize ()
 		return r
 
 	def __repr__ (self):

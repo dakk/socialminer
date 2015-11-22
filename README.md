@@ -57,9 +57,10 @@ maintein a local database **reports.db**
 TODO
 ---
 The software is still work in progress, planned features are:
-- Peer to peer network for data exchanging
+- Peer to peer network for data exchanging (using kademlia network)
 - A more robust search crtieria
 - Integration of other social networks
+- Auto report on social network
 
 
 

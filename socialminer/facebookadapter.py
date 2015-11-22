@@ -35,7 +35,7 @@ class FacebookAdapter (SocialAdapter):
 				pd = self.api.request ('search', {'type': 'page', 'q': phrase})
 				f = False
 			except:
-				logger.debug ('Reached rate limit or token expired, waiting 60 seconds...')
+				logger.debug ('Reached rate limit or invalid token, waiting 60 seconds...')
 				time.sleep (60)
 				continue
 
@@ -48,13 +48,13 @@ class FacebookAdapter (SocialAdapter):
 						msg = post['message'][0:128]
 
 					res = Resource (post['created_time'], 'PagePost', post['id'], '', msg)
-					r = Report (self.NAME, post['from']['name']+' | '+post['from']['id'], {res.ID: res}, time.time (), '')
+					r = Report (self.NAME, post['from']['id'], {res.ID: res}, time.time (), '')
 					self.reportHandler (r)
 
 
 	def loop (self):
 		while True:
-			(phrase_t, phrase) = SearchTerms.generate ()
+			(phrase, phrase_t) = SearchTerms.generate ()
 			self.analyze (phrase)
-			self.analyze (phrase_t)
+			#self.analyze (phrase_t)
 			time.sleep (5)

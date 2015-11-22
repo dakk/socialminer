@@ -1,3 +1,4 @@
+import copy
 import logging
 import sys
 import os
@@ -6,7 +7,7 @@ import time
 import shelve
 from queue import Queue
 from threading import Lock, Thread
-from . import config
+from . import config, reporter
 from .twitteradapter import TwitterAdapter
 from .facebookadapter import FacebookAdapter
 
@@ -28,13 +29,12 @@ class SocialMiner:
 			self.reportsDict = self.db['reports']
 		self.db.close ()
 
+
 	def report (self, report):
 		self.reportLock.acquire ()
 
-
 		if report.user in self.reportsDict[report.adapter]:
-			logger.info ('%s: User %s already reported, updating', report.adapter, report.user)#print (str (report))
-
+			#logger.info ('%s: User %s already reported, updating', report.adapter, report.user)#print (str (report))
 			# Update shared resources
 			for tid in report.resources:
 				if not tid in self.reportsDict[report.adapter][report.user].resources:
@@ -57,8 +57,28 @@ class SocialMiner:
 
 		self.reportLock.release ()
 
-	def reportHandler (self, report):
-		self.queue.put (report)
+
+	def startReporter (self):
+		self.reporter = reporter.Reporter (self.conf['p2p']['port'], self.conf['p2p']['seeds'], self.reportHandler)
+		t = Thread(target=self.announce, args=())
+		t.start ()
+
+	def announce (self):
+		i = 0
+		rd = copy.deepcopy (self.reportsDict)
+
+		for k in rd:
+			data = {}
+			data[k] = {}
+			for kk in rd[k]:
+				i += 1
+				self.reporter.announce (rd[k][kk])
+		logger.debug ('Announced %s accounts to network', i)
+
+
+	def reportHandler (self, report, broadcast=True):
+		self.queue.put ((report, broadcast))
+
 
 	def startAdapters (self):
 		adapts = []
@@ -81,17 +101,21 @@ class SocialMiner:
 
 
 	def dump (self):
-		for k in self.reportsDict:
+		rd = copy.deepcopy (self.reportsDict)
+
+		for k in rd:
 			data = {}
 			data[k] = {}
-			for kk in self.reportsDict[k]:
-				data[k][kk] = self.reportsDict[k][kk].serialize ()
+			for kk in rd[k]:
+				data[k][kk] = rd[k][kk].serialize ()
 
 			f = open ('reports_' + k + '.json', 'w')
 			f.write (json.dumps (data, indent=4, separators=(',', ': ')))
 			f.close ()
 
+
 	def loop (self):
+		i = 0
 		for adapter in self.adapters:
 			thread = Thread(target=adapter.loop, args=())
 			self.threads.append (thread)
@@ -99,19 +123,32 @@ class SocialMiner:
 			logger.info ('Started thread for adapter %s', adapter.NAME)
 
 		while True:
+			i += 1
 			t = True
 			while t:
 				try:
-					d = self.queue.get_nowait ()
-					self.report (d)
+					(report, broadcast) = self.queue.get_nowait ()
+					self.report (report)
+					if broadcast:
+						self.reporter.announce (d)
 				except:
 					t = False
 
-			logger.debug ('Running, %d suspicious accounts detected', len (self.reportsDict['Twitter']) +  len (self.reportsDict['Facebook']))
+			rac = 0
 			for ad in self.reportsDict:
-				logger.debug ('\t%s -> %d accounts', ad, len (self.reportsDict[ad]))
+				logger.debug ('%s -> %d accounts', ad, len (self.reportsDict[ad]))
+				rac += len (self.reportsDict[ad])
+
+			logger.debug ('Running, %d suspicious accounts detected', rac)
+
+			self.reporter.stats ()
 			time.sleep (10)
-			self.dump ()
+
+			if i % 2 == 0:
+				t = Thread(target=self.announce, args=())
+				t.start ()
+				t = Thread(target=self.dump, args=())
+				t.start ()
 
 def main ():
 	logger.debug ('Starting socialminer.')
@@ -134,4 +171,5 @@ def main ():
 
 	sm = SocialMiner (jconf)
 	sm.startAdapters ()
+	sm.startReporter ()
 	sm.loop ()

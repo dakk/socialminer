@@ -51,7 +51,7 @@ class TwitterAdapter (SocialAdapter):
 			try:
 				res = self.api.search (phrase, rpp=100) #, page=page)
 			except:
-				logger.debug ('Reached rate limit, waiting 60 seconds...')
+				logger.debug ('Reached rate limit or invalid token, waiting 60 seconds...')
 				time.sleep (60)
 				continue
 
@@ -64,7 +64,7 @@ class TwitterAdapter (SocialAdapter):
 
 	def loop (self):
 		while True:
-			(phrase_t, phrase) = SearchTerms.generate ()
+			(phrase, phrase_t) = SearchTerms.generate ()
 			self.analyze (phrase)
-			self.analyze (phrase_t)
+			#self.analyze (phrase)
 			time.sleep (5)
