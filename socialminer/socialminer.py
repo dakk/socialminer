@@ -7,7 +7,7 @@ import time
 import shelve
 from queue import Queue
 from threading import Lock, Thread
-from . import config, reporter
+from . import config, reporter, optools
 from .twitteradapter import TwitterAdapter
 from .facebookadapter import FacebookAdapter
 
@@ -47,6 +47,10 @@ class SocialMiner:
 		else:
 			logger.info ('%s: Reporting user %s', report.adapter, report.user)#print (str (report))
 			self.reportsDict[report.adapter][report.user] = report
+
+			if report.adapter == 'Twitter':
+				optools.submitTwitterAccount (report.user)
+
 
 		self.reportsDict[report.adapter][report.user].confidence = len (self.reportsDict[report.adapter][report.user].resources)
 
@@ -144,10 +148,10 @@ class SocialMiner:
 			self.reporter.stats ()
 			time.sleep (10)
 
-			if i % 6 == 0:
+			if i % 40 == 0:
 				t = Thread(target=self.announce, args=())
 				t.start ()
-			if i % 12 == 0:
+			if i % 20 == 0:
 				t = Thread(target=self.dump, args=())
 				t.start ()
 
