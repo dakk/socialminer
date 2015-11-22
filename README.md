@@ -34,7 +34,7 @@ Start socialminer for the first time:
 Socialminer will create an empty configuration file 'socialminer.json' in your current directory.
 
 
-Configure Peer-to-peer network
+Configure the peer-to-peer network
 ---
 Socialminer allows you to customize your p2p port, or insert new seed node in the form "host:port" (by editing 'socialminer.json').
 
