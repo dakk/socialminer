@@ -1,0 +1,7 @@
+[Unit]
+Description=Socialminer daemon
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "/usr/bin/socialminer /root/"
+RemainAfterExit=yes
