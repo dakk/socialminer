@@ -49,7 +49,10 @@ class SocialMiner:
 			self.reportsDict[report.adapter][report.user] = report
 
 			if report.adapter == 'Twitter':
-				optools.submitTwitterAccount (report.user)
+				try:
+					optools.submitTwitterAccount (report.user)
+				except:
+					logger.error ('Error while submitting Twitter account to optools')
 
 
 		self.reportsDict[report.adapter][report.user].confidence = len (self.reportsDict[report.adapter][report.user].resources)
